@@ -46,8 +46,8 @@ class wusm_archives_plugin {
 		if( !is_admin() ) { add_action( 'wp_enqueue_scripts', array( $this, 'wusm_custom_archive_style' ) ); }
 		/*add_action( 'init', array( $this, 'plugin_function' ) );*/
 		add_shortcode( 'wusm_archive', array( $this, 'wusm_custom_archive' ) );
-		add_action( 'wp_ajax_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
-		add_action( 'wp_ajax_nopriv_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
+		add_action( 'MY_AJAX_HANDLER_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
+		add_action( 'MY_AJAX_HANDLER_nopriv_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
 	}
 
 	public function wusm_custom_archive_style() {
@@ -75,18 +75,19 @@ class wusm_archives_plugin {
 	}
 
 	function wusm_archive_load_more_callback() {
-		echo $this->load_wusm_posts( $_POST['type'], $_POST['page'] );
+		echo $this->load_wusm_posts( $_POST['post_type'], $_POST['page'] );
 		die();
 	}
 
 	private function load_wusm_posts( $type, $page ) {
 		$output = "";
+		$num_to_fetch = apply_filters( "{$type}_num_per_page", 30);
 
 		if( $page === 1 ) {
 			// WP_Query arguments
 			$args = array (
 				'post_type' 	 => $type,
-				'posts_per_page' => '30',
+				'posts_per_page' => $num_to_fetch,
 				'paged'     	 => $page,
 				'orderby' 	     => 'date',
 				'meta_query' => array(
@@ -100,7 +101,7 @@ class wusm_archives_plugin {
 
 			// The Query
 			$query = new WP_Query( $args );
-
+			$num_to_fetch = $num_to_fetch - ( sizeof( $query->posts ) );
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) {
 					$query->the_post();
@@ -114,7 +115,7 @@ class wusm_archives_plugin {
 		// WP_Query arguments
 		$args = array (
 			'post_type' 	 => $type,
-			'posts_per_page' => '30',
+			'posts_per_page' => $num_to_fetch,
 			'paged'     	 => $page,
 			'orderby' 	     => 'date'
 		);
