@@ -16,9 +16,14 @@ jQuery(document).ready(function($) {
 				post_type:   type
 			},
 			success:function(data) {
-				$(".spinner").hide();
-				$(".custom-archive").append(data);
-				$("#load-more").data('page', parseInt(page, 10) + 1);
+				if(data !== 'false') {
+					$(".spinner").hide();
+					$(".custom-archive").append(data);
+					$("#load-more").data('page', parseInt(page, 10) + 1);
+				} else {
+					$("#load-more").hide();
+					$("#no-more").show();
+				}
 			},
 			error:function(data) {
 				$("#load-more").hide();

@@ -90,13 +90,8 @@ class wusm_archives_plugin {
 				'posts_per_page' => $num_to_fetch,
 				'paged'     	 => $page,
 				'orderby' 	     => 'date',
-				'meta_query' => array(
-					array(
-						'key' => 'sticky',
-						'value' => 1,
-						'compare' => '=',
-					)
-				)
+				'meta_key'       => 'sticky',
+				'meta_value'     => 1,
 			);
 
 			// The Query
@@ -121,13 +116,18 @@ class wusm_archives_plugin {
 			'posts_per_page' => $num_to_fetch,
 			'paged'     	 => $page,
 			'orderby' 	     => 'date',
-				'meta_query' => array(
-					array(
-						'key' => 'sticky',
-						'value' => 1,
-						'compare' => '!=',
-					)
-				)
+			'meta_query'     => array(
+				array(
+					'key'     => 'sticky',
+					'value'   => 1,
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'sticky',
+					'compare' => 'NOT EXISTS'
+				),
+				'relation' => 'OR'
+			)
 		);
 
 		// The Query
