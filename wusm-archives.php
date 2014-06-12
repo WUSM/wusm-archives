@@ -84,8 +84,6 @@ class wusm_archives_plugin {
 		$num_to_fetch = apply_filters( "{$type}_num_per_page", 30);
 
 		if( $page === 1 ) {
-
-			
 			// WP_Query arguments
 			$args = array (
 				'post_type' 	 => $type,
@@ -103,6 +101,7 @@ class wusm_archives_plugin {
 
 			// The Query
 			$query = new WP_Query( $args );
+			$ids = $query->posts;
 			$num_to_fetch = $num_to_fetch - ( sizeof( $query->posts ) );
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) {
@@ -121,7 +120,14 @@ class wusm_archives_plugin {
 			'post_type' 	 => $type,
 			'posts_per_page' => $num_to_fetch,
 			'paged'     	 => $page,
-			'orderby' 	     => 'date'
+			'orderby' 	     => 'date',
+				'meta_query' => array(
+					array(
+						'key' => 'sticky',
+						'value' => 1,
+						'compare' => '!=',
+					)
+				)
 		);
 
 		// The Query
