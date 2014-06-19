@@ -65,6 +65,31 @@ class wusm_archives_plugin {
 			'type' => 'post'
 		), $atts ) );
 
+				//a hack for now
+		if($type == 'research_news') {
+			$args = array(
+				'show_option_all'    => 'All Expertise',
+				'show_option_none'   => '',
+				'orderby'            => 'ID', 
+				'order'              => 'ASC',
+				'show_count'         => 0,
+				'hide_empty'         => 0, 
+				'child_of'           => 0,
+				'exclude'            => '',
+				'echo'               => 1,
+				'selected'           => 0,
+				'hierarchical'       => 1, 
+				'name'               => 'research-news-expertise',
+				'id'                 => '',
+				'class'              => 'postform',
+				'depth'              => 0,
+				'tab_index'          => 0,
+				'taxonomy'           => 'expertise',
+				'hide_if_empty'      => false,
+			);
+			//wp_dropdown_categories( $args );
+		}
+
 		$output = "<div class='$type-custom-archive custom-archive'>";
 		$output .= $this->load_wusm_posts( $type,  1 );
 		$output .= "</div>";
@@ -89,7 +114,7 @@ class wusm_archives_plugin {
 				'post_type' 	 => $type,
 				'posts_per_page' => $num_to_fetch,
 				'paged'     	 => $page,
-				'orderby' 	     => 'date',
+				'orderby' 	     => 'menu_order',
 				'meta_key'       => 'sticky',
 				'meta_value'     => 1,
 			);
@@ -154,12 +179,15 @@ class wusm_archives_plugin {
 		$output = '';
 		add_filter( 'excerpt_more', function() { return ''; } );
 
-		$title_text = apply_filters( "{$type}_title_text", '<h3>' . get_the_title() . '</h3>', $post_id );
-		$date_text = apply_filters( "{$type}_date_text", get_the_date("m/d/y"), $post_id );
-		$link_text = apply_filters( "{$type}_link_text", $title_text, $post_id );
-		$excerpt_text = apply_filters( "{$type}_excerpt_text", get_the_excerpt(), $post_id );
+		$title_text     = apply_filters( "{$type}_title_text", '<h3>' . get_the_title() . '</h3>', $post_id );
+		$date_text      = apply_filters( "{$type}_date_text", get_the_date("m/d/y"), $post_id );
+		$link_text      = apply_filters( "{$type}_link_text", $title_text, $post_id );
+		$excerpt_text   = apply_filters( "{$type}_excerpt_text", get_the_excerpt(), $post_id );
+		$show_thumbnail = apply_filters( "{$type}_show_thumbnail", true, $post_id );
 		$thumbnail_size = apply_filters( "{$type}_thumbnail_size", 'post-thumbnail', $post_id );
-		$link_field = apply_filters( "{$type}_link_field", '', $post_id );
+		$link_field     = apply_filters( "{$type}_link_field", '', $post_id );
+
+		$ga_title       = get_the_title();
 		
 		if( $link_field !== '' ) {
 			$link = get_field( $link_field );
@@ -174,14 +202,15 @@ class wusm_archives_plugin {
 		if( $url === 'http://' )
 			$url = 'javascript:return false;';
 		
-		//a hack for now
 		if($type != 'in_focus') {
 			$output .= "<div class='$type-custom-archive-entry custom-archive-entry clearfix'>";
 			$output .= ( $date_text === "" ) ? "" : "<span class='$type-custom-archive-date custom-archive-date'>$date_text</span><br>";
-			$output .= ( $link_text === "" ) ? "" : "<span class='$type-custom-archive-link custom-archive-link'><a href='$url'>$link_text</a></span>";
+			$output .= ( $link_text === "" ) ? "" : "<span class='$type-custom-archive-link custom-archive-link'><a onclick=\"javascript:_gaq.push(['_trackEvent','{$type}-archive','$ga_title']);\" href='$url'>$link_text</a></span>";
 			$output .= ( $excerpt_text === "" ) ? "" : "<span class='$type-custom-archive-excerpt custom-archive-excerpt'>$excerpt_text</span><br>";
-			$output .= "<a href='$url'>";
-			$output .= get_the_post_thumbnail($post_id, $thumbnail_size, array( 'class'	=> "$type-custom-archive-thumb custom-archive-thumb" ) );
+			$output .= "<a onclick=\"javascript:_gaq.push(['_trackEvent','{$type}-archive','$ga_title']);\" href='$url'>";
+			if( $show_thumbnail ) {
+				$output .= get_the_post_thumbnail($post_id, $thumbnail_size, array( 'class'	=> "$type-custom-archive-thumb custom-archive-thumb" ) );
+			}
 			$output .= "</a>";
 			$output .= "</div>";
 		} else {
@@ -191,10 +220,12 @@ class wusm_archives_plugin {
 			$output .= "<hr>";
 			$output .= ( $date_text === "" ) ? "" : "<span class='$type-custom-archive-date custom-archive-date'>$date_text</span><br>";
 			$output .= ( $excerpt_text === "" ) ? "" : "<span class='$type-custom-archive-excerpt custom-archive-excerpt'>$excerpt_text</span>";
-			$output .= ( $link_text === "" ) ? "" : "<span class='$type-custom-archive-link custom-archive-link'><a href='$url'>$link_text</a></span>";
+			$output .= ( $link_text === "" ) ? "" : "<span class='$type-custom-archive-link custom-archive-link'><a onclick=\"javascript:_gaq.push(['_trackEvent','{$type}-archive','$ga_title']);\" href='$url'>$link_text</a></span>";
 			$output .= "</div>";
-			$output .= "<a href='$url'>";
-			$output .= get_the_post_thumbnail($post_id, $thumbnail_size, array( 'class'	=> "$type-custom-archive-thumb custom-archive-thumb" ) );
+			$output .= "<a onclick=\"javascript:_gaq.push(['_trackEvent','{$type}-archive','$ga_title']);\" href='$url'>";
+			if( $show_thumbnail ) {
+				$output .= get_the_post_thumbnail($post_id, $thumbnail_size, array( 'class'	=> "$type-custom-archive-thumb custom-archive-thumb" ) );
+			}
 			$output .= "</a>";
 			$output .= "</div>";
 		}

@@ -59,3 +59,23 @@
 	position: relative;
 	height: 38px;
 }
+
+#research-news-expertise {
+	position: relative;
+	width: 100%;
+	display: block;
+	height: 38px;
+	margin-bottom: 20px;
+	border-radius: 9px;
+	border: 1px solid #e0e0e0;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f1f0f0), color-stop(50%, #ebebeb), color-stop(100%, #e5e5e5));
+	background-image: -webkit-linear-gradient(#f1f0f0,#ebebeb,#e5e5e5);
+	background-image: -moz-linear-gradient(#f1f0f0,#ebebeb,#e5e5e5);
+	background-image: -o-linear-gradient(#f1f0f0,#ebebeb,#e5e5e5);
+	background-image: linear-gradient(#f1f0f0,#ebebeb,#e5e5e5);
+	color: #990000;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	font-weight: bold;
+	cursor: pointer;
+}
