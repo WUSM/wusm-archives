@@ -31,4 +31,24 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
+
+	$("#research-news-expertise").change(function() {
+		$.ajax({
+			type : 'post',
+			url: '/wp-content/plugins/wusm-archives/get_archive_posts.php',
+			data: {
+				action   : 'wusm_archive_load_more',
+				page:   0,
+				post_type:   'research_news',
+				cat: $("#research-news-expertise option:selected").val()
+			},
+			success:function(data) {
+				$(".custom-archive").html(data);
+			},
+			error:function(data) {
+				$("#load-more").hide();
+				$("#no-more").show();
+			}
+		});
+	});
 });

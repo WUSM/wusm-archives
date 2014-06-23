@@ -67,27 +67,21 @@ class wusm_archives_plugin {
 
 				//a hack for now
 		if($type == 'research_news') {
+			
+			// event category dropdown
 			$args = array(
-				'show_option_all'    => 'All Expertise',
-				'show_option_none'   => '',
-				'orderby'            => 'ID', 
-				'order'              => 'ASC',
-				'show_count'         => 0,
-				'hide_empty'         => 0, 
-				'child_of'           => 0,
-				'exclude'            => '',
-				'echo'               => 1,
-				'selected'           => 0,
-				'hierarchical'       => 1, 
-				'name'               => 'research-news-expertise',
-				'id'                 => '',
-				'class'              => 'postform',
-				'depth'              => 0,
-				'tab_index'          => 0,
-				'taxonomy'           => 'expertise',
-				'hide_if_empty'      => false,
-			);
-			//wp_dropdown_categories( $args );
+				'hide_empty'    => false, 
+			); 
+			$categories_list = get_terms( 'expertise', $args );
+
+			if ($categories_list) {
+				echo '<select class="dd" id="research-news-expertise">';
+				echo '<option value="0" selected="selected">All Expertise</option>';
+				foreach( $categories_list as $key => $cat ) {
+					echo '<option value="'.$cat->slug.'">'.$cat->name.'</option>';
+				}
+				echo '</select>';
+			}
 		}
 
 		$output = "<div class='$type-custom-archive custom-archive'>";
@@ -100,11 +94,11 @@ class wusm_archives_plugin {
 	}
 
 	function wusm_archive_load_more_callback() {
-		echo $this->load_wusm_posts( $_POST['post_type'], $_POST['page'] );
+		echo $this->load_wusm_posts( $_POST['post_type'], $_POST['page'], $_POST['cat'] );
 		die();
 	}
 
-	private function load_wusm_posts( $type, $page ) {
+	private function load_wusm_posts( $type, $page, $cat = '' ) {
 		$output = "";
 		$num_to_fetch = apply_filters( "{$type}_num_per_page", 30);
 
@@ -135,25 +129,34 @@ class wusm_archives_plugin {
 			}
 		}
 
-		// WP_Query arguments
-		$args = array (
-			'post_type' 	 => $type,
-			'posts_per_page' => $num_to_fetch,
-			'paged'     	 => $page,
-			'orderby' 	     => 'date',
-			'meta_query'     => array(
-				array(
-					'key'     => 'sticky',
-					'value'   => 1,
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'sticky',
-					'compare' => 'NOT EXISTS'
-				),
-				'relation' => 'OR'
-			)
-		);
+		if( $type === 'research_news' && $cat !== '' ) {
+			$args = array (
+				'post_type' 	 => $type,
+				'posts_per_page' => $num_to_fetch,
+				'paged'     	 => $page,
+				'orderby' 	     => 'date',
+				'expertise'      => $cat
+			);
+		} else {
+			$args = array (
+				'post_type' 	 => $type,
+				'posts_per_page' => $num_to_fetch,
+				'paged'     	 => $page,
+				'orderby' 	     => 'date',
+				'meta_query'     => array(
+					array(
+						'key'     => 'sticky',
+						'value'   => 1,
+						'compare' => '!=',
+					),
+					array(
+						'key'     => 'sticky',
+						'compare' => 'NOT EXISTS'
+					),
+					'relation' => 'OR'
+				)
+			);
+		}
 
 		// The Query
 		$query = new WP_Query( $args );
