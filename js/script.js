@@ -39,6 +39,7 @@ jQuery(document).ready(function($) {
 	});
 
 	$("#research-news-expertise").change(function() {
+		category = $("#research-news-expertise option:selected").val();
 		$.ajax({
 			type : 'post',
 			url: '/wp-content/plugins/wusm-archives/get_archive_posts.php',
@@ -46,11 +47,15 @@ jQuery(document).ready(function($) {
 				action   : 'wusm_archive_load_more',
 				page     : 1,
 				post_type: 'research_news',
-				cat      : $("#research-news-expertise option:selected").val()
+				cat      : category
 			},
 			success:function(data) {
 				if( data !== 'false') {
 					$(".custom-archive").html(data);
+					if( category === '' ) {
+						$("#load-more").show();
+						$("#no-more").hide();
+					}
 					$("#load-more").data('page', 2);
 					$("#load-more").data('type', 'research_news');
 				} else {

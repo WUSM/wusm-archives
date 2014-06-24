@@ -76,7 +76,7 @@ class wusm_archives_plugin {
 
 			if ($categories_list) {
 				echo '<select class="dd" id="research-news-expertise">';
-				echo '<option value="0" selected="selected">All Expertise</option>';
+				echo '<option value="" selected="selected">All Expertise</option>';
 				foreach( $categories_list as $key => $cat ) {
 					echo '<option value="'.$cat->slug.'">'.$cat->name.'</option>';
 				}
