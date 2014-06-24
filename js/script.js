@@ -43,7 +43,12 @@ jQuery(document).ready(function($) {
 				cat: $("#research-news-expertise option:selected").val()
 			},
 			success:function(data) {
-				$(".custom-archive").html(data);
+				if( data !== 'false') {
+					$(".custom-archive").html(data);
+				} else {
+					$(".custom-archive").html("No stories found for " + $("#research-news-expertise option:selected").text());
+					$("#load-more").hide();
+				}
 			},
 			error:function(data) {
 				$("#load-more").hide();

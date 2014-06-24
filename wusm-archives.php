@@ -70,7 +70,7 @@ class wusm_archives_plugin {
 			
 			// event category dropdown
 			$args = array(
-				'hide_empty'    => false, 
+				'hide_empty'    => true,
 			); 
 			$categories_list = get_terms( 'expertise', $args );
 
