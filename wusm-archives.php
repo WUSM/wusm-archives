@@ -46,8 +46,8 @@ class wusm_archives_plugin {
 		if( !is_admin() ) { add_action( 'wp_enqueue_scripts', array( $this, 'wusm_custom_archive_style' ) ); }
 		/*add_action( 'init', array( $this, 'plugin_function' ) );*/
 		add_shortcode( 'wusm_archive', array( $this, 'wusm_custom_archive' ) );
-		add_action( 'MY_AJAX_HANDLER_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
-		add_action( 'MY_AJAX_HANDLER_nopriv_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
+		add_action( 'wusm_archives_ajax_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
+		add_action( 'wusm_archives_ajax_nopriv_wusm_archive_load_more', array( $this, 'wusm_archive_load_more_callback' ) );
 	}
 
 	public function wusm_custom_archive_style() {
@@ -70,7 +70,7 @@ class wusm_archives_plugin {
 			
 			// event category dropdown
 			$args = array(
-				'hide_empty'    => true,
+				'hide_empty'    => true, 
 			); 
 			$categories_list = get_terms( 'expertise', $args );
 

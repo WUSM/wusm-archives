@@ -5,6 +5,11 @@ jQuery(document).ready(function($) {
 		
 		page = $(this).data('page');
 		type = $(this).data('type');
+		if( $("#research-news-expertise")[0] ) {
+			category = $("#research-news-expertise option:selected").val();
+		} else {
+			category = '';
+		}
 
 		// This does the ajax request
 		$.ajax({
@@ -12,8 +17,9 @@ jQuery(document).ready(function($) {
 			url: '/wp-content/plugins/wusm-archives/get_archive_posts.php',
 			data: {
 				action   : 'wusm_archive_load_more',
-				page:   page,
-				post_type:   type
+				page     : page,
+				post_type: type,
+				cat      : category
 			},
 			success:function(data) {
 				if(data !== 'false') {
@@ -38,13 +44,15 @@ jQuery(document).ready(function($) {
 			url: '/wp-content/plugins/wusm-archives/get_archive_posts.php',
 			data: {
 				action   : 'wusm_archive_load_more',
-				page:   0,
-				post_type:   'research_news',
-				cat: $("#research-news-expertise option:selected").val()
+				page     : 1,
+				post_type: 'research_news',
+				cat      : $("#research-news-expertise option:selected").val()
 			},
 			success:function(data) {
 				if( data !== 'false') {
 					$(".custom-archive").html(data);
+					$("#load-more").data('page', 2);
+					$("#load-more").data('type', 'research_news');
 				} else {
 					$(".custom-archive").html("No stories found for " + $("#research-news-expertise option:selected").text());
 					$("#load-more").hide();
