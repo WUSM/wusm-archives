@@ -33,6 +33,7 @@ jQuery(document).ready(function($) {
 			},
 			error:function(data) {
 				$("#load-more").hide();
+				$(".spinner").hide();
 				$("#no-more").show();
 			}
 		});
@@ -53,6 +54,7 @@ jQuery(document).ready(function($) {
 				if( data !== 'false') {
 					$(".custom-archive").html(data);
 					if( category === '' ) {
+						$(".spinner").hide();
 						$("#load-more").show();
 						$("#no-more").hide();
 					}
@@ -65,6 +67,7 @@ jQuery(document).ready(function($) {
 			},
 			error:function(data) {
 				$("#load-more").hide();
+				$(".spinner").hide();
 				$("#no-more").show();
 			}
 		});
