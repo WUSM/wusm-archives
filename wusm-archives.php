@@ -109,6 +109,7 @@ class wusm_archives_plugin {
 				'posts_per_page' => $num_to_fetch,
 				'paged'     	 => $page,
 				'orderby' 	     => 'menu_order',
+				'order'          => 'ASC',
 				'meta_key'       => 'sticky',
 				'meta_value'     => 1,
 			);
