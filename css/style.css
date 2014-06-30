@@ -79,3 +79,8 @@
 	font-weight: bold;
 	cursor: pointer;
 }
+
+#research-news-expertise option {
+	color: #000;
+	font-weight: normal;
+}
