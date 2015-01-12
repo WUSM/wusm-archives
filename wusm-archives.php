@@ -65,7 +65,8 @@ class wusm_archives_plugin {
 			'type' => 'post'
 		), $atts ) );
 
-				//a hack for now
+		$output = "";
+		//a hack for now
 		if($type == 'research_news') {
 			
 			// event category dropdown
@@ -75,16 +76,16 @@ class wusm_archives_plugin {
 			$categories_list = get_terms( 'expertise', $args );
 
 			if ($categories_list) {
-				echo '<select class="dd" id="research-news-expertise">';
-				echo '<option value="" selected="selected">All Expertise</option>';
+				$output .= '<select class="dd" id="research-news-expertise">';
+				$output .= '<option value="" selected="selected">All Expertise</option>';
 				foreach( $categories_list as $key => $cat ) {
-					echo '<option value="'.$cat->slug.'">'.$cat->name.'</option>';
+					$output .= '<option value="'.$cat->slug.'">'.$cat->name.'</option>';
 				}
-				echo '</select>';
+				$output .= '</select>';
 			}
 		}
 
-		$output = "<div class='$type-custom-archive custom-archive'>";
+		$output .= "<div class='$type-custom-archive custom-archive'>";
 		$output .= $this->load_wusm_posts( $type,  1 );
 		$output .= "</div>";
 		$output .= "<p id='load-more' data-type='$type' data-page='2'>Load More<span class='spinner'></span></p>";
